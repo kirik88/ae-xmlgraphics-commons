@@ -146,6 +146,10 @@ public class Service {
         if (cl == null) {
             return l;
         }
+        
+        // Because of unable reading META-INF fill names manually.
+        if (fillDefautsProviderNames(cls, l))
+            return l;
 
         Enumeration<URL> e;
         try {
@@ -206,6 +210,22 @@ public class Service {
 
     private static String getServiceFilename(Class<?> cls) {
         return "META-INF/services/" + cls.getName();
+    }
+    
+    private static boolean fillDefautsProviderNames(Class<?> cls, List<String> l) {
+        if (cls == org.apache.xmlgraphics.image.loader.spi.ImagePreloader.class) {
+            l.add("org.apache.xmlgraphics.image.loader.impl.PreloaderTIFF");
+            l.add("org.apache.xmlgraphics.image.loader.impl.PreloaderGIF");
+            l.add("org.apache.xmlgraphics.image.loader.impl.PreloaderJPEG");
+            l.add("org.apache.xmlgraphics.image.loader.impl.PreloaderBMP");
+            l.add("org.apache.xmlgraphics.image.loader.impl.PreloaderEMF");
+            l.add("org.apache.xmlgraphics.image.loader.impl.PreloaderEPS");
+            l.add("org.apache.xmlgraphics.image.loader.impl.imageio.PreloaderImageIO");
+            
+            return true;
+        }
+        
+        return false;
     }
 
 }
